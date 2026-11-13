@@ -32,7 +32,7 @@ table { border-collapse: collapse; margin: 1.5mm 0; font-size: 9pt; } th, td { b
 .parts { margin: 1mm 0 0 3mm; } .parts div { margin: 0.6mm 0; }
 .line { border-bottom: 1px dotted #666; display:inline-block; width: 40mm; height: 4mm; vertical-align: bottom; }
 .small { font-size: 8.6pt; color:#555; } .sol p { margin: 1.4mm 0; } .sol ul { margin: 1mm 0 1mm 5mm; padding:0; }
-.cover { break-after: page; }
+.cover { margin-bottom: 4mm; }
 """
 
 def pre(code, cls=''):
@@ -54,11 +54,11 @@ def cover(answers):
     s += '''<div class="box"><b>Instructions</b><ul style="margin:1mm 0 0 4mm;padding:0">
 <li>100 marks: <b>Section A</b> — 16 select-all multiple-choice questions (2 marks each = 32); <b>Section B</b> — 13 short-answer questions (68 marks).</li>
 <li>No computer is allowed: every answer can be derived by hand or with a scientific calculator. Randomness is always supplied explicitly (no unseeded random calls).</li>
-<li>Library behaviour is as in the unit notebooks: NumPy ≥ 2, scikit-learn 1.x, statsmodels/patsy, PyTorch 2.x, pgmpy 1.1 (<code>DiscreteBayesianNetwork</code>, <code>DiscreteMarkovNetwork</code>). Arrays are printed by NumPy defaults.</li>
+<li>Library behaviour is as in the unit notebooks (outputs were produced with Python 3.13, NumPy 2.5, pandas 3.0, scikit-learn 1.9, SciPy 1.18, statsmodels/patsy, PyTorch 2.15, pgmpy 1.1.2; <code>DiscreteBayesianNetwork</code>, <code>DiscreteMarkovNetwork</code>). Arrays are printed by NumPy defaults.</li>
 <li>For multiple-choice questions select <b>all</b> correct options; one or more may be correct.</li></ul></div>'''
     s += '<table><tr><th>Week</th><th>Questions</th></tr>' + rows + '</table>'
     if answers:
-        s += '<div class="box small">Mọi output trong tài liệu này được <b>chạy thật</b> bằng Python 3.13 (numpy 2.3, scikit-learn 1.7, pgmpy 1.1.2, PyTorch 2.11) rồi mới viết lời giải. Lời giải bằng tiếng Việt, thuật ngữ giữ tiếng Anh.</div>'
+        s += '<div class="box small">Mọi output trong tài liệu này được <b>chạy thật</b> bằng Python 3.13 (numpy 2.5, pandas 3.0, scikit-learn 1.9, pgmpy 1.1.2, PyTorch 2.15; đã kiểm tra ổn định qua nhiều PYTHONHASHSEED) rồi mới viết lời giải. Lời giải bằng tiếng Việt, thuật ngữ giữ tiếng Anh.</div>'
     s += '</div>'
     return s
 
@@ -102,7 +102,8 @@ def render(answers):
     return h
 
 here = os.path.dirname(os.path.abspath(__file__))
-dst = os.path.dirname(here)
+dst = os.path.join(here, 'deliverables')
+os.makedirs(dst, exist_ok=True)
 open(os.path.join(dst, 'FIT5149_Code_Output_Exam.html'), 'w').write(render(False))
 open(os.path.join(dst, 'FIT5149_Code_Output_Exam_Answers.html'), 'w').write(render(True))
 tot = 2*len(MCQ) + sum(q['marks'] for q in SA); print('total marks', tot, 'questions', len(MCQ)+len(SA))

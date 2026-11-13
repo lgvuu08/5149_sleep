@@ -200,9 +200,9 @@ phi1 = DiscreteFactor(['A', 'B'], [2, 2], [3, 1, 1, 3])   # values listed as (A0
 phi2 = DiscreteFactor(['B', 'C'], [2, 2], [2, 1, 1, 2])   # values listed as (B0C0, B0C1, B1C0, B1C1)
 
 psi = phi1 * phi2
-print(psi.scope(), psi.values.shape)
+print(sorted(psi.scope()), psi.values.shape)
 tau = psi.marginalize(['B'], inplace=False)
-print(tau.scope())
+print(sorted(tau.scope()))
 print(tau.values)
 print(tau.values.sum())
 tau.normalize()
@@ -455,23 +455,20 @@ for u in [(0.80, 0.50, 0.70), (0.30, 0.20, 0.95)]:
 
 CODE['B12'] = '''import numpy as np
 
-sigmoid = lambda t: 1 / (1 + np.exp(-t))
-W = np.array([[ 1.0, -2.0,  0.5,  0.0],
-              [-1.0,  1.5,  0.0,  2.0],
-              [ 2.0,  0.0, -1.0, -0.5]])        # 3 visible x 4 hidden
-a = np.array([0.0, -0.5, 0.5])                  # visible biases
-b = np.array([-1.0, 0.0, 0.5, -0.5])            # hidden biases
+p_tilde = lambda z: 4 * z * (1 - z)         # unnormalised target on [0, 1]
+q = lambda z: np.ones_like(z)               # proposal Uniform(0, 1): density 1
+k = 1.0                                     # chosen so that k * q(z) >= p_tilde(z) for every z
 
-v    = np.array([0, 1, 1])
-p_h  = sigmoid(b + v @ W);    h  = (np.array([0.70, 0.10, 0.45, 0.20]) < p_h).astype(int)
-p_v  = sigmoid(a + W @ h);    v2 = (np.array([0.05, 0.99, 0.30]) < p_v).astype(int)
-p_h2 = sigmoid(b + v2 @ W)
-dW   = np.outer(v, p_h) - np.outer(v2, p_h2)
+z0 = np.array([0.10, 0.50, 0.85, 0.30, 0.95, 0.65, 0.20, 0.40])   # draws from the proposal q
+u  = np.array([0.50, 0.90, 0.10, 0.80, 0.30, 0.45, 0.35, 0.99])   # independent Uniform(0, 1) draws
+u0 = u * k * q(z0)                                                 # u0 ~ Uniform(0, k q(z0))
+accept = u0 < p_tilde(z0)
 
-print(p_h.round(3), h)
-print(p_v.round(3), v2)
-print(p_h2.round(3))
-print(dW.round(3))'''
+print(p_tilde(z0).round(2))
+print(accept.astype(int))
+print(z0[accept], accept.mean())
+print(round(z0[accept].mean(), 3))
+print(round((2 / 3) / k, 3), round((2 / 3) / 2.0, 3))'''
 
 CODE['B13a'] = '''import itertools
 
