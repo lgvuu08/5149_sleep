@@ -44,7 +44,7 @@ dict(id='A3', week='Week 2 · Classification metrics', code='A3',
   ("<code>cm[0, 1] = 2</code> counts observations whose true class is 0 but which were predicted as 1.", T,
    "<code>confusion_matrix(y_true, pred)</code>: hàng = <b>true</b>, cột = <b>predicted</b>. cm[0,1] là true=0, pred=1 (false positive): các điểm 0.55 và 0.60."),
   ("The rows of the confusion matrix correspond to the predicted classes.", F,
-   "Hàng là nhãn thật, cột là nhãn dự đoán (đúng như notebook Week 2: 'C_ij = số quan sát thuộc nhóm i được dự đoán vào nhóm j')."),
+   "Hàng là nhãn thật, cột là nhãn dự đoán: C<sub>ij</sub> = số quan sát thuộc lớp i được dự đoán vào lớp j (quy ước của <code>sklearn.metrics.confusion_matrix</code>)."),
   ("The printed error rate is 0.4.", T,
    "Sai = 2 (FP) + 2 (FN) = 4 trong 10 ⇒ 0.4 (cũng chính là cm[0,1]+cm[1,0] chia 10)."),
   ("The observation with probability exactly 0.50 is classified as class 1 by the first rule.", F,
@@ -295,7 +295,7 @@ Hệ số: intercept = 3.0 (vùng cơ sở), tiếp theo là <i>chênh lệch</i
 <p><b>(d)</b> RSS = tổng bình phương sai lệch khỏi mean từng vùng: vùng 1: (−1)²+1²+0+0 = 2; vùng 2: 0.5²+0.5² = 0.5; vùng 3: (−1)²+1²+0 = 2 ⇒ <b>4.5</b>. (1 điểm)</p>"""),
 
 dict(id='B3', week='Week 4 · Support vector machine', marks=5, code='B3',
- stem='The seven observations are those of the Week 4 sample question (4 red, 3 blue). <code>C = 1e6</code> makes the fit effectively a hard-margin classifier. Predict the output.',
+ stem='Seven observations (4 red, 3 blue) in the style of the ISLP Chapter 9 hard-margin exercise are used. <code>C = 1e6</code> makes the fit effectively a hard-margin classifier. Predict the output.',
  parts=[
   ("(a) What does <code>classes_</code> print, and which class has a positive decision function?", 1),
   ("(b) Give <code>n_support_</code> and the sorted <code>support_</code> list, and identify the support vectors.", 1),
@@ -304,7 +304,7 @@ dict(id='B3', week='Week 4 · Support vector machine', marks=5, code='B3',
  ],
  sol="""
 <p><b>(a)</b> <code>['blue' 'red']</code> (sắp xếp theo alphabet). <code>decision_function &gt; 0</code> ứng với <code>classes_[1]</code> = <b>red</b>; &lt; 0 ứng với blue. (1 điểm)</p>
-<p><b>(b)</b> <code>n_support_ = [2 2]</code> (2 blue, 2 red). Chỉ số (0-based) <code>[1, 2, 4, 5]</code> ⇒ các quan sát 2, 3, 5, 6 trong đề: (2,2), (4,4) màu đỏ và (2,1), (4,3) màu xanh. Các điểm (3,4), (1,4), (4,1) nằm xa margin ⇒ dịch chuyển nhẹ không đổi siêu phẳng (đúng như ý Q2(f) của đề mẫu). (1 điểm)</p>
+<p><b>(b)</b> <code>n_support_ = [2 2]</code> (2 blue, 2 red). Chỉ số (0-based) <code>[1, 2, 4, 5]</code> ⇒ các quan sát 2, 3, 5, 6 trong đề: (2,2), (4,4) màu đỏ và (2,1), (4,3) màu xanh. Các điểm (3,4), (1,4), (4,1) nằm xa margin ⇒ dịch chuyển nhẹ không đổi siêu phẳng (chỉ support vector quyết định ranh giới). (1 điểm)</p>
 <p><b>(c)</b> Trên support vector: w·x + b = +1 (đỏ) và −1 (xanh). Giải: w = (−2, 2), b = 1 ⇒ <code>[[-2. 2.]] [1.]</code>. Siêu phẳng −2X₁ + 2X₂ + 1 = 0 ⇔ X₁ − X₂ − 0.5 = 0 (đường X₂ = X₁ − 0.5). Margin (độ rộng toàn phần) = 2/‖w‖ = 2/(2√2) = 0.707. Kiểm tra: (2,2): −4+4+1 = +1 ✓; (2,1): −4+2+1 = −1 ✓; (4,3): −8+6+1 = −1 ✓. (2 điểm)</p>
 <p><b>(d)</b> (3,1): −6+2+1 = −3 &lt; 0 ⇒ blue; (1,1): −2+2+1 = +1 &gt; 0 ⇒ red ⇒ <code>['blue' 'red']</code>. (3,2): −6+4+1 = <b>−1.0</b> — nằm đúng trên ranh giới margin phía blue. (1 điểm)</p>"""),
 
@@ -446,24 +446,21 @@ dict(id='B11', week='Week 11 · Gibbs sampling with evidence', marks=5, code='B1
 Sweep 1 kết thúc ở (1,1,2). (2 điểm)</p>
 <p><b>(b)</b> Sweep 2: P(D | g=2, i=1) = [0.13, 0.87], u = 0.30 ⇒ d = 1; P(I | g=2, d=1) = [0.338, 0.662], u = 0.20 ⇒ <b>i = 0</b>; P(G | d=1, i=0) = [0.006, 0.125, 0.868], u = 0.95 ⇒ g = 2. Trạng thái: <code>(1, 0, 2)</code>. (1 điểm)</p>
 <p><b>(c)</b> S, L là <b>evidence</b> nên được gán cố định (ta lấy mẫu P(X | E = e), X = {D, I, G}). Trong <code>cond_D</code> chỉ còn các nhân tử chứa D: P(D) và P(G | I, D) (Markov blanket của D: con G và cha khác của G là I); các nhân tử P(I), P(S|I), P(L|G) không phụ thuộc D nên <b>triệt tiêu khi chuẩn hoá</b>. (1 điểm)</p>
-<p><b>(d)</b> Ước lượng <b>P(I = 1 | S = 1, L = 0) ≈ 0.7226</b> (giá trị đúng tính bằng enumeration; một lần chạy 60 000 sweeps cho 0.722). Hai vấn đề thực tế: (1) <b>burn-in</b> — bỏ các mẫu đầu vì còn phụ thuộc vào khởi tạo; (2) các mẫu liên tiếp <b>tự tương quan</b> (autocorrelation ≈ 0.2 cho I) nên số mẫu hiệu dụng nhỏ hơn số sweep. (1 điểm)</p>"""),
+<p><b>(d)</b> Ước lượng <b>P(I = 1 | S = 1, L = 0) ≈ 0.7226</b> (giá trị đúng tính bằng enumeration; một lần chạy 60 000 sweeps cho ≈ 0.72). Hai vấn đề thực tế: (1) <b>burn-in</b> — bỏ các mẫu đầu vì còn phụ thuộc vào khởi tạo; (2) các mẫu liên tiếp <b>tự tương quan</b> (autocorrelation ≈ 0.2 cho I) nên số mẫu hiệu dụng nhỏ hơn số sweep. (1 điểm)</p>"""),
 
-dict(id='B12', week='Week 11 · Restricted Boltzmann machine (one Gibbs step and CD-1)', marks=5, code='B12',
- stem='A binary RBM has 3 visible and 4 hidden units. A unit is set to 1 when its uniform draw is smaller than its activation probability. The hidden draws are (0.70, 0.10, 0.45, 0.20) and the visible draws are (0.05, 0.99, 0.30). Predict the output.',
+dict(id='B12', week='Week 11 · Rejection sampling (univariate)', marks=5, code='B12',
+ stem='We want samples from the density proportional to the unnormalised target p&#771;(z) = 4z(1 − z) on [0, 1], using the Uniform(0, 1) proposal q(z) = 1 and the rejection-sampling recipe from the Week 11 notebook: draw z<sub>0</sub> ~ q, draw u<sub>0</sub> ~ Uniform(0, k·q(z<sub>0</sub>)), accept z<sub>0</sub> if u<sub>0</sub> &lt; p&#771;(z<sub>0</sub>). The random numbers are supplied explicitly. Predict the output.',
  parts=[
-  ("(a) Line 1: P(h = 1 | v) and the sampled h.", 2),
-  ("(b) Line 2: P(v = 1 | h) and the reconstruction v′.", 1),
-  ("(c) Lines 3–4: the new hidden probabilities and the contrastive-divergence update dW.", 1),
-  ("(d) Which statements in the code correspond to one step of block Gibbs sampling? Why can all hidden units be sampled at the same time?", 1),
+  ("(a) Give lines 1 and 2: the values p&#771;(z<sub>0</sub>) and the accept/reject indicators. Show how one accepted and one rejected draw are decided.", 2),
+  ("(b) Give line 3 (accepted samples and the empirical acceptance rate).", 1),
+  ("(c) Give line 4, and explain why the sample mean of the accepted values is a valid estimate of E[Z] under the <i>normalised</i> target even though p&#771; is unnormalised.", 1),
+  ("(d) Line 5 prints the theoretical acceptance rates for k = 1 and k = 2. Derive them, and explain what happens to the samples if k is chosen too small (e.g. k = 0.5).", 1),
  ],
  sol="""
-<p><b>(a)</b> Với v = (0,1,1): pre-activation = b + vW = b + (hàng 2 + hàng 3 của W) = (−1,0,0.5,−0.5) + (1, 1.5, −1, 1.5) = (0, 1.5, −0.5, 1.0).
-σ(·) = <code>[0.5 0.818 0.378 0.731]</code>. Với u = (0.70, 0.10, 0.45, 0.20), so sánh u &lt; p: 0.70 &lt; 0.5? Không ⇒ 0; 0.10 &lt; 0.818 ⇒ 1; 0.45 &lt; 0.378? Không ⇒ 0; 0.20 &lt; 0.731 ⇒ 1 ⇒ h = <code>[0 1 0 1]</code>. (2 điểm)</p>
-<p><b>(b)</b> a + Wh = (0,−0.5,0.5) + (cột 2 + cột 4 của W = (−2+0, 1.5+2, 0−0.5) = (−2, 3.5, −0.5)) = (−2, 3, 0) ⇒ σ = <code>[0.119 0.953 0.5]</code>. u = (0.05, 0.99, 0.30): 0.05 &lt; 0.119 ⇒ 1; 0.99 &lt; 0.953? Không ⇒ 0; 0.30 &lt; 0.5 ⇒ 1 ⇒ v′ = <code>[1 0 1]</code> (khác v ban đầu). (1 điểm)</p>
-<p><b>(c)</b> P(h | v′) với v′ = (1,0,1): b + (hàng 1 + hàng 3) = (−1,0,0.5,−0.5) + (3,−2,−0.5,−0.5) = (2,−2,0,−1) ⇒ σ = <code>[0.881 0.119 0.5 0.269]</code>.
-dW = v·p_hᵀ − v′·p_h2ᵀ (positive phase − negative phase) = <code>[[-0.881 -0.119 -0.5 -0.269], [0.5 0.818 0.378 0.731], [-0.381 0.698 -0.122 0.462]]</code>.
-Hàng 2 dương vì visible 2 bằng 1 ở dữ liệu nhưng 0 ở reconstruction: CD tăng w₂ⱼ để mô hình 'thấy' pattern dữ liệu; hàng 1 âm vì mô hình tái tạo v₁ = 1 trong khi dữ liệu có v₁ = 0. (1 điểm)</p>
-<p><b>(d)</b> Một bước block Gibbs là 3 dòng: <code>p_h → h</code> (sample hidden | v), <code>p_v → v2</code> (sample visible | h) và (cho CD-1) <code>p_h2</code>. Vì không có cạnh giữa các unit cùng tầng nên P(H | v) = ∏ⱼ P(Hⱼ | v) và P(V | h) = ∏ᵢ P(Vᵢ | h): các unit trong một tầng <b>độc lập có điều kiện</b> ⇒ lấy mẫu cả tầng song song bằng cách so sánh từng xác suất với một Uniform(0,1) độc lập. (1 điểm)</p>"""),
+<p><b>(a)</b> p&#771;(z) = 4z(1−z): z = 0.10 → 0.36; 0.50 → 1.00; 0.85 → 0.51; 0.30 → 0.84; 0.95 → 0.19; 0.65 → 0.91; 0.20 → 0.64; 0.40 → 0.96 ⇒ <code>[0.36 1. 0.51 0.84 0.19 0.91 0.64 0.96]</code>. Vì k·q(z) = 1 nên u<sub>0</sub> = u. Ví dụ <b>z = 0.50</b>: u<sub>0</sub> = 0.90 &lt; 1.00 ⇒ <b>accept</b>; ví dụ <b>z = 0.95</b>: u<sub>0</sub> = 0.30 &gt; 0.19 ⇒ <b>reject</b> (z gần biên có p&#771; nhỏ nên hay bị loại). Indicators: <code>[0 1 1 1 0 1 1 0]</code> (đủ điểm nếu đúng cả hai dòng và có giải thích 1 mẫu accept, 1 mẫu reject). (2 điểm)</p>
+<p><b>(b)</b> 5 mẫu được giữ: <code>[0.5  0.85 0.3  0.65 0.2 ] 0.625</code> (các mẫu 0.5, 0.85, 0.3, 0.65, 0.2), acceptance rate = 5/8 = <b>0.625</b>. (1 điểm)</p>
+<p><b>(c)</b> Trung bình = (0.5 + 0.85 + 0.3 + 0.65 + 0.2)/5 = <b>0.5</b>. Rejection sampling chỉ cần p&#771; <b>đến một hằng số nhân</b>: xác suất chấp nhận z là p&#771;(z)/(k·q(z)) nên mật độ của các mẫu được giữ tỉ lệ với q(z)·p&#771;(z)/(k·q(z)) ∝ p&#771;(z); hằng số chuẩn hoá Z<sub>p</sub> bị triệt tiêu khi chuẩn hoá ⇒ các mẫu giữ lại là mẫu từ p(z) = p&#771;(z)/Z<sub>p</sub> = 6z(1−z) (Beta(2,2), kỳ vọng đúng = 0.5 do đối xứng). Với 5 mẫu, trùng khớp 0.5 là may mắn; nói chung có sai số Monte Carlo ~ 1/√n. (1 điểm)</p>
+<p><b>(d)</b> Acceptance rate lý thuyết = ∫p̃(z)dz / (k·∫q(z)dz) = (2/3)/k (∫₀¹4z(1−z)dz = 2/3) ⇒ k = 1: <b>0.667</b>; k = 2: <b>0.333</b>. Với k = 2 mẫu vẫn đúng phân phối nhưng <b>lãng phí</b> gấp đôi (k càng lớn so với mức cần thiết thì càng nhiều reject). Nếu k quá nhỏ (k = 0.5) thì k·q(z) = 0.5 &lt; p̃(z) quanh z ∈ (0.15, 0.85): xác suất chấp nhận bị cắt ở 1 (u<sub>0</sub> &lt; 0.5 &lt; p̃) nên vùng gần mode bị <b>lấy thiếu</b> (đỉnh bị 'phẳng' đi) ⇒ phân phối mẫu sai. Điều kiện k·q(z) ≥ p̃(z) với mọi z là bắt buộc; trong nhiều chiều k tăng rất nhanh nên rejection sampling gần như vô dụng ⇒ cần MCMC (Gibbs). (1 điểm)</p>"""),
 
 dict(id='B13', week='Week 12 · Learning structure (PC) and parameters', marks=5, code='B13a', code2='B13b',
  stem='Part 1 runs the skeleton phase of the PC algorithm with a p-value "oracle" (α = 0.05; every test not in <code>table</code> has p = 0.0005 and therefore rejects independence). Part 2 estimates parameters from data.',
